@@ -1,0 +1,13 @@
+<div id="maptableContainer" class="col-xs-12">
+  {% include 'maptable/datamap/_map.html' %}
+
+  {% include 'maptable/datatable/_table.html' %}
+</div>
+
+<!-- <link href="../static/maptable.css" rel="stylesheet" type="text/css"> -->
+<script src="../static/maptable.js"></script>
+<script>
+  $(document).ready(function() {
+    $("#maptableContainer").maptable({});
+  });
+</script>

@@ -1,0 +1,20 @@
+#ignore thumbnails created by windows
+Thumbs.db
+
+#ignore all npm packages
+node_modules/
+
+#ignore WebStorm directory
+.idea/
+
+#ignore flat files
+Prov-Crime-Data/
+
+#ignore Python bytecode files
+*.pyc
+
+#ignore the custom python server
+server_py/
+
+#ignore individual files
+pg_importer.py
