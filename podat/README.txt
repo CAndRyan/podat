@@ -1,4 +1,4 @@
-React-Prov web application
+podat web application
 (@Author: Chris Ryan)
 
 ------------------------------------------------------------------------
@@ -36,19 +36,19 @@ $ sudo pip install Flask
 $ sudo pip install tornado
 
 ***Add symlink to the included scripts (to be cleaned up later):
-$ sudo ln -s /home/<username>/Documents/react-prov/react-prov/scripts /usr/lib/python2.7/dist-packages/pg_prov
+$ sudo ln -s /home/<username>/Documents/podat/podat/scripts /usr/lib/python2.7/dist-packages/pg_prov
 
 ***Setup a launch script for development and production (in ~/bin/, requires ~/logs for production);
 $ nano ~/bin/start-prov.sh
   Add the following (swap the last lines to run on 127.0.0.0 instead of listening on all ip's):
-    export FLASK_APP=/home/<username>/Documents/react-prov/react-prov/app/run.py
+    export FLASK_APP=/home/<username>/Documents/podat/podat/app/run.py
     flask run --host=0.0.0.0
     #python -m flask
   CTRL+O -> ENTER -> CTRL+X
 $ chmod u+x ~/bin/start-prov.sh
 $ nano ~/bin/start-prov-tornado.sh
   Add the following:
-    nohup python /home/<username>/Documents/react-prov/react-prov/app/run-tornado.py > ~/logs/react-prov-tornado.log 2>&1&
+    nohup python /home/<username>/Documents/podat/podat/app/run-tornado.py > ~/logs/podat-tornado.log 2>&1&
     echo $! > ~/logs/run-tornado-pid.txt
   CTRL+O -> ENTER -> CTRL+X
 $ chmod u+x ~/bin/start-prov-tornado.sh
