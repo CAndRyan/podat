@@ -1,8 +1,14 @@
 <div id="dataTable">
-  <em>Data from: <span class="timestamp">0000</span></em>
-  <span>
-    <a id="apiLink">GET</a>
-  </span>
+  <div id="apiLink">
+    <em>Data from: <span class="timestamp"></span></em>
+    <span class="link-container">
+      <a>refresh</a>
+    </span>
+    <img class="loading-img" src="../static/images/loading/loading-ellipsis.svg" />
+    <!-- <div style="margin-top: -110px; margin-left: 200px; margin-bottom: -90px;">
+      {% include '_loading-triangle.html' %}
+    </div> -->
+  </div>
 
   <div class="col-xs-12 custom-table">
     <div class="custom-head">

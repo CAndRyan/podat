@@ -17,22 +17,26 @@
         // Establish default settings
         me.options = $.extend({
             mapDivId: "mapDiv",
-            initialLatLng: [41.8240, -71.4128],
+            initialLatLng: [41.8240, -71.4128], //center of Providence, RI
             initialZoom: 13,
             maxZoom: 18,
-            layerId: me.name //'React-Prov'
+            layerId: me.name, //'React-Prov'
+            loadingClass: "loading"
         }, options);
 
         me.map = null;
         me.markers = {};
         me.numRows = 0;
+        me.currentTimestamp = 0;
         me.$tableHead = $(".custom-head", me.$element);
         me.$tableBody = $(".custom-body", me.$element);
+        me.$apiLink = $("#apiLink", me.$element);
 
         try
         {
           me.setupMap();
           me.attach_EventHandlers();
+          me.ajaxData();
         }
         catch (ex)
         {
@@ -120,6 +124,9 @@
         me.numRows++;
       });
 
+      me.currentTimestamp = (new Date()).toLocaleString();
+
+      $(".timestamp", me.$apiLink).text(me.currentTimestamp);
       me.$tableBody.append($rows);
     }
 
@@ -132,6 +139,7 @@
       var me = this;
 
       me.$tableBody.html("");
+      me.$apiLink.addClass(me.options.loadingClass);
       me.numRows = 0;
       var options = {
         limit: 10
@@ -144,9 +152,11 @@
         data: JSON.stringify(options),
         error: function (jqXHR, textStatus, errorThrown) {
           console.error(me.name + " encountered a '" + textStatus + "' ajax error: " + errorThrown);
+          me.$apiLink.removeClass(me.options.loadingClass);
         },
         success: function (dat, textStatus, jqXHR) {
           me.buildTable(dat);
+          me.$apiLink.removeClass(me.options.loadingClass);
         }
       });
     }
@@ -155,7 +165,7 @@
     {
         var me = this;
 
-        $("#apiLink", me.$element).click(function (event) {
+        $("a", me.$apiLink).click(function (event) {
           me.ajaxData();
         })
     }
