@@ -28,6 +28,8 @@
         me.markers = {};
         me.numRows = 0;
         me.currentTimestamp = 0;
+        me.tableCollapsed = true;   // to be updated during initialization
+
         me.$tableHead = $(".custom-head", me.$element);
         me.$tableBody = $(".custom-body", me.$element);
         me.$apiLink = $("#apiLink", me.$element);
@@ -35,6 +37,7 @@
         try
         {
           me.setupMap();
+          me.handleWindowSize();
           me.attach_EventHandlers();
           me.ajaxData();
         }
@@ -128,6 +131,7 @@
 
       $(".timestamp", me.$apiLink).text(me.currentTimestamp);
       me.$tableBody.append($rows);
+      $("[data-toggle='tooltip']", me.$tableBody).tooltip();
     }
 
     maptable.prototype.updateTimestamp = function (dateStr) {
@@ -151,7 +155,7 @@
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(options),
         error: function (jqXHR, textStatus, errorThrown) {
-          console.error(me.name + " encountered a '" + textStatus + "' ajax error: " + errorThrown);
+          console.error(me.name + " encountered an ajax error: " + textStatus + " - " + errorThrown);
           me.$apiLink.removeClass(me.options.loadingClass);
         },
         success: function (dat, textStatus, jqXHR) {
@@ -167,7 +171,27 @@
 
         $("a", me.$apiLink).click(function (event) {
           me.ajaxData();
-        })
+        });
+
+        // custom window resizing event to prevent awkard overflows
+        $(window).resize(function() {
+          me.handleWindowSize();
+        });
+    }
+
+    maptable.prototype.handleWindowSize = function () {
+      var me = this;
+
+      if ($(window).width() < 768) {
+        $(".custom-table", me.$element).addClass("custom-collapse");
+        $(".custom-expand").removeClass("col-xs-2").addClass("col-xs-4");
+        me.tableCollapsed = true;
+      }
+      else if (me.tableCollapsed) {
+        $(".custom-expand").removeClass("col-xs-4").addClass("col-xs-2");
+        $(".custom-table", me.$element).removeClass("custom-collapse");
+        me.tableCollapsed = false;
+      }
     }
 
     // Push the plug-in into jQuery

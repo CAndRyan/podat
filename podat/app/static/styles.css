@@ -42,6 +42,9 @@ nav.navbar .navbar-collapse a {
   text-align: center;
   overflow: auto;
 }
+#dataTable .custom-collapse .custom-hide {
+  display: none;
+}
 
 .float-right {
   float: right;
@@ -56,6 +59,9 @@ nav.navbar .navbar-collapse a {
 #apiLink .link-container {
   padding-left: 10px;
 }
+#apiLink.loading a {
+  display: none;
+}
 #apiLink:not(.loading) .loading-img {
-  visibility: hidden;
+  display: none;
 }
