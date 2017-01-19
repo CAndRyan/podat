@@ -15,6 +15,7 @@ Prov-Crime-Data/
 
 #ignore the custom python server
 server_py/
+logs-pi/
 
 #ignore individual files
 pg_importer.py
