@@ -1,52 +1,58 @@
-# run.py
-#
-# Start the web app, using Flask - http://flask.pocoo.org/
-#
+"""run.py - Start the web app, using Flask - http://flask.pocoo.org/"""
+
+# pylint: disable=C0301
+# pylint: disable=W0703
 
 # Import flask and the necessary components
-from flask import Flask, request, redirect, url_for, render_template, jsonify, send_from_directory
 import os
+from flask import Flask, request, render_template, jsonify, send_from_directory  #redirect, url_for
 import requests     # pip install requests
 
 # Import the Psycopg2 and db helper modules
 #add symlink to the scripts 'module': sudo ln -s /<initialDirectory>/scripts/ /usr/local/lib/python2.7/dist-packages/pg_prov
+#on Windows -> mklink /D C:\Python27\Lib\site-packages\pg_prov "<initialDirectory>\scripts"
 from pg_prov import pg_connect as pgc
 #import prov_classes as prov
 from pg_prov import prov_db as pdb
 
 # Establish the Flask app with config
-app = Flask(__name__)
-app.config.from_object("config")
+APP = Flask(__name__)
+APP.config.from_object("config")
 
 # Establish a database connection
-db = pgc.PgConnect.with_user("candryan")
-mapboxKey = pdb.ProvDB.get_api_key(db, "mapbox")
+DB = pgc.PgConnect.with_user("candryan")
+MAPBOX_KEY = pdb.ProvDB.get_api_key(DB, "mapbox")
 
 # Define favicon.ico view
-@app.route('/favicon.ico')
+@APP.route('/favicon.ico')
 def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+    """Define favicon.ico view"""
+    return send_from_directory(os.path.join(APP.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 # Define app routing
-@app.route('/')
+@APP.route('/')
 def index():
+    """Define app routing"""
     return render_template("index.html")
 
-@app.route('/api', methods=["POST"])
+# Define the API request
+@APP.route('/api', methods=["GET"])
 def api():
-    #rows = db.select("prov_statute", ["*"], """id > 0 LIMIT 5""")
-    #return "\n".join(db.stringify_rows(rows))
-    #return jsonify(request.get_json(force=True))
+    """Define the API request"""
     #obj = request.get_json(force=True)
-    #rows = db.select(obj["table"], ["*"], """id > {0} LIMIT {1}""".format(obj["idCondition"], obj["limit"]))
-    #return "\n".join(db.stringify_rows(rows))
-    obj = request.get_json(force=True)
-    rows = pdb.ProvDB.get_crimes(db)
+    limit = 10
+    try:
+        limit = int(request.args.get("limit"))
+    except Exception as ex:
+        return (str(ex), 400)
+
+    rows = pdb.ProvDB.get_crimes(DB, limit)
     return jsonify(rows)     #**rows if using map instead of list
 
 # Define proxy endpoint for retrieving the map tileset for Leaflet (using MapBox)
-@app.route('/get-tiles-proxy', methods=["GET"])
+@APP.route('/get-tiles-proxy', methods=["GET"])
 def get_tiles():
+    """Define proxy endpoint for retrieving the map tileset for Leaflet (using MapBox)"""
     zxy = [0]*3
     url = "https://api.mapbox.com/styles/v1/mapbox/streets-v10/tiles/256/{0}/{1}/{2}?access_token={3}"
 
@@ -57,12 +63,12 @@ def get_tiles():
     except Exception as ex:
         return (str(ex), 400)
 
-    if not mapboxKey == None:
+    if MAPBOX_KEY is not None:
         try:
-            mUrl = url.format(zxy[0], zxy[1], zxy[2], mapboxKey)
+            m_url = url.format(zxy[0], zxy[1], zxy[2], MAPBOX_KEY)
         except Exception as ex:
             return (str(ex), 500)
 
-        return requests.get(mUrl).content
+        return requests.get(m_url).content
     else:
         return ('', 204)

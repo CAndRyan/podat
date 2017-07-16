@@ -1,4 +1,20 @@
 <div id="dataTable">
+  <div id="apiOptionBar">
+    <label for="apiLimit">Limit:</label>
+    <select id="apiLimit">
+      <option value="10">10</option>
+      <option value="20">20</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+    </select>
+
+    <label for="apiDateFrom">From:</label>
+    <input id="apiDateFrom" />
+
+    <label for="apiDateTo">To:</label>
+    <input id="apiDateTo" />
+  </div>
+
   <div id="apiLink">
     <em>Data from: <span class="timestamp"></span></em>
     <span class="link-container">

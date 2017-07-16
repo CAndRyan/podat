@@ -19,3 +19,4 @@ logs-pi/
 
 #ignore individual files
 pg_importer.py
+npm-debug.log

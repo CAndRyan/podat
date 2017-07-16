@@ -34,6 +34,10 @@
         me.$tableBody = $(".custom-body", me.$element);
         me.$apiLink = $("#apiLink", me.$element);
 
+        me.$apiOptions = {
+          "limit": $("#apiLimit", me.$element)
+        }
+
         try
         {
           me.setupMap();
@@ -139,6 +143,20 @@
       return date.toLocaleString();
     }
 
+    maptable.prototype.buildUrlWithQuery = function (url, queryObj) {
+      var args = [];
+
+      $.each(Object.keys(queryObj), function(index, element) {
+        args.push(element + "=" + queryObj[element]);
+      });
+
+      if (args.length > 0) {
+        url = url + "?" + args.join("&");
+      }
+
+      return url;
+    }
+
     maptable.prototype.ajaxData = function () {
       var me = this;
 
@@ -146,14 +164,13 @@
       me.$apiLink.addClass(me.options.loadingClass);
       me.numRows = 0;
       var options = {
-        limit: 10
+        limit: me.$apiOptions["limit"].val()
       }
 
       $.ajax({
-        url: "/api",
-        method: "POST",
+        url: me.buildUrlWithQuery("/api", options),
+        method: "GET",
         contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(options),
         error: function (jqXHR, textStatus, errorThrown) {
           console.error(me.name + " encountered an ajax error: " + textStatus + " - " + errorThrown);
           me.$apiLink.removeClass(me.options.loadingClass);

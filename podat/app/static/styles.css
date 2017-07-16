@@ -65,3 +65,7 @@ nav.navbar .navbar-collapse a {
 #apiLink:not(.loading) .loading-img {
   display: none;
 }
+
+#apiOptionBar {
+  margin-bottom: 10px;
+}

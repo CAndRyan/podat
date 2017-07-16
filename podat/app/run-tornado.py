@@ -1,26 +1,30 @@
+"""run_tornado.py - Run a Flask app through the Tornado Python server"""
+
+import signal
+import logging
 from tornado.wsgi import WSGIContainer
 from tornado.httpserver import HTTPServer
 #from tornado.ioloop import IOLoop
 import tornado.ioloop
-import signal
-import logging
-from run import app
+from run import APP
 
-is_closing = False
+IS_CLOSING = False
 def signal_handler(signum, frame):
-    global is_closing
+    """Define the server closing signal"""
+    global IS_CLOSING
     logging.info('exiting...')
-    is_closing = True
+    IS_CLOSING = True
 def try_exit():
-    global is_closing
-    if is_closing:
+    """Define the server exit function"""
+    global IS_CLOSING
+    if IS_CLOSING:
         # clean up here
         tornado.ioloop.IOLoop.instance().stop()
         logging.info('exit success')
 
-http_server = HTTPServer(WSGIContainer(app))
+SERVER = HTTPServer(WSGIContainer(APP))
 signal.signal(signal.SIGINT, signal_handler)
-http_server.listen(5555)
+SERVER.listen(5555)
 tornado.ioloop.PeriodicCallback(try_exit, 100).start()
 tornado.ioloop.IOLoop.instance().start()
 #IOLoop.instance().start()
