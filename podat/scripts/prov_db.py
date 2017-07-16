@@ -6,12 +6,14 @@ class ProvDB(object):
     """An class containing stored procedures for the prov database"""
 
     @classmethod
-    def get_crimes(cls, pg_connect, limit=20, columns=None):
+    def get_crimes(cls, pg_connect, limit=20, from_dt=None, to_dt=None, columns=None):
         """Get full crime objects from the database"""
         if columns is None:
             columns = ["*"]
         if limit > 200:
             limit = 200
+        if limit < 1:
+            limit = 1
 
         col_str = ", ".join(columns)
         select_str = """SELECT {0} FROM prov_crime AS pc JOIN prov_statute AS ps ON pc.statute_id = ps.id JOIN prov_location AS pl ON pc.location_id = pl.id WHERE pl.latitude <> 0 ORDER BY pc.reported_date LIMIT {1};""".format(col_str, str(limit))

@@ -35,7 +35,9 @@
         me.$apiLink = $("#apiLink", me.$element);
 
         me.$apiOptions = {
-          "limit": $("#apiLimit", me.$element)
+          "limit": $("#apiLimit", me.$element),
+          "fromDate": $("#apiDateFrom", me.$element),
+          "toDate": $("#apiDateTo", me.$element)
         }
 
         try
@@ -164,7 +166,9 @@
       me.$apiLink.addClass(me.options.loadingClass);
       me.numRows = 0;
       var options = {
-        limit: me.$apiOptions["limit"].val()
+        limit: me.$apiOptions["limit"].val(),
+        from: me.$apiOptions["fromDate"].val(),
+        to: me.$apiOptions["toDate"].val()
       }
 
       $.ajax({

@@ -40,13 +40,19 @@ def index():
 def api():
     """Define the API request"""
     #obj = request.get_json(force=True)
+
     limit = 10
+    from_dt = None
+    to_dt = None
+
     try:
         limit = int(request.args.get("limit"))
+        from_dt = request.args.get("from")
+        to_dt = request.args.get("to")
     except Exception as ex:
         return (str(ex), 400)
 
-    rows = pdb.ProvDB.get_crimes(DB, limit)
+    rows = pdb.ProvDB.get_crimes(DB, limit, from_dt, to_dt)
     return jsonify(rows)     #**rows if using map instead of list
 
 # Define proxy endpoint for retrieving the map tileset for Leaflet (using MapBox)
